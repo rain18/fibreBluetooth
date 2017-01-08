@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +24,21 @@ import lecho.lib.hellocharts.model.ValueShape;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 import rain.fibreoblue.R;
+import rain.fibreoblue.utils.CtrlProperty;
 import rain.fibreoblue.utils.QueueController;
+import rain.fibreoblue.utils.SharePrefenceConfig;
 
 
 public class ChartActivity extends Activity{
 
     private static final String TAG = "ChartActivity";
     private LineChartView lineChart;
-    private static Integer length = 24;
+    private static Integer blueQLength = Integer.valueOf(CtrlProperty.getDefaultProperties().getProperty("ChartQLenth")); //缓存区的长度
+    private static Integer dChartFreq = Integer.valueOf(CtrlProperty.getDefaultProperties().getProperty("ChartFreq")); //刷新频率
+    private static Integer dChartLength = Integer.valueOf(CtrlProperty.getDefaultProperties().getProperty("ChartLength")); //默认画图点数
+    private static Integer chartFreq;//实际刷新频率
+    private static Integer chartLength;//实际的点数
+    private SharePrefenceConfig shaConfig = new SharePrefenceConfig(this);
     private QueueController queueController;
     private Button btn1,btn2,btnStart,btnStop;
     private DrawLineThread chartThread;
@@ -41,9 +49,11 @@ public class ChartActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart);
         lineChart = (LineChartView) findViewById(R.id.line_chart);
-        queueController = new QueueController(48);
+        queueController = new QueueController(blueQLength);
+        chartFreq = shaConfig.getConfig("ChartFreq",dChartFreq);
+        chartLength = shaConfig.getConfig("ChartLength",dChartLength);
         init();
-        chartThread = new DrawLineThread(length, lineChart,queueController);
+        chartThread = new DrawLineThread(chartFreq,chartLength,lineChart,queueController);
         drawThread = new Thread(chartThread);
         drawThread.start();
     }
@@ -57,15 +67,17 @@ public class ChartActivity extends Activity{
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                length = 24;
-                chartThread.setLength(length);
+                chartLength = 24;
+                shaConfig.saveConfig("m",chartLength);
+                chartThread.setLength(chartLength);
             }
         });
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                length = 20;
-                chartThread.setLength(length);
+                chartLength = 20;
+                shaConfig.saveConfig("m",chartLength);
+                chartThread.setLength(chartLength);
             }
         });
         //重启图表

@@ -149,6 +149,16 @@ public class BluetoothController {
 	}
 
 	/**
+	 * 取消蓝牙之间的连接
+	 */
+	public void disconnect() {
+		if (bleGatt != null) {
+			bleGatt.disconnect();
+			bleGatt.close();
+		}
+	}
+
+	/**
 	 * 与蓝牙同步回调
 	 */
 	public BluetoothGattCallback bleGattCallback = new BluetoothGattCallback() {

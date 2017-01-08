@@ -20,6 +20,15 @@
             android:textColor="#ffffaa22"
             android:drawableLeft="@drawable/search_icon"
             android:textSize="32sp"/>
+        <Button
+            android:id="@+id/disconnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="断开"
+            android:layout_marginLeft="40dp"
+            android:background="@null"
+            android:textColor="#ffffaa22"
+            android:textSize="32sp"/>
     </LinearLayout>
 
     
@@ -31,13 +40,21 @@
         android:layout_marginLeft="40dp">
     </ListView>
 
+    <TextView android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/connected_device"
+        android:layout_marginLeft="40dp"
+        android:layout_below="@id/list_devices"
+        android:layout_marginTop="20dp"/>
+
     <LinearLayout
+        android:id="@+id/btn_select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/list_devices">
+        android:layout_below="@+id/connected_device">
         <!-- GONE消失，invisible不显示 -->
         <Button
-            android:id="@+id/self_test"
+            android:id="@+id/self_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="自检"
@@ -47,7 +64,7 @@
             android:textColor="#ffffaa22"
             android:textSize="32sp" />
         <Button
-            android:id="@+id/deschart"
+            android:id="@+id/work"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="工作"
@@ -56,17 +73,20 @@
             android:layout_weight="1"
             android:textColor="#ffffaa22"
             android:textSize="32sp" />
+        <Button
+            android:id="@+id/deschart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="波形"
+            android:visibility="invisible"
+            android:background="@null"
+            android:layout_weight="1"
+            android:textColor="#ffffaa22"
+            android:textSize="32sp" />
     </LinearLayout>
-    
-    <TextView android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/connected_device"
-        android:layout_marginLeft="40dp"
-        android:layout_below="@id/list_devices"
-        android:layout_marginTop="20dp"/>
     <RelativeLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/connected_device"
+        android:layout_below="@id/btn_select"
         android:id="@+id/re_send"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="40dp">

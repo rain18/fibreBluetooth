@@ -14,26 +14,9 @@ public class QueueController {
     private static final String TAG="queueController:";
     private Queue<String> queue = new LinkedList<>();
     private Integer length;
-    private Handler handler = new Handler();
-    public QueueController(){}
-
-    public Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            String temp = Double.toString(Math.random()*10);
-            insert(temp);
-            handler.postDelayed(this,400);
-        }
-    };
 
     public QueueController(Integer length) {
         this.length = length;
-//        for (Integer i=0;i<48;i++) {
-//            String temp = Double.toString(Math.random()*10);
-//            Log.i(TAG, temp);
-//            insert(temp);
-//        }
-//        handler.postDelayed(runnable,400);
     }
 
     //队列中插入新的元素
@@ -44,17 +27,13 @@ public class QueueController {
         queue.offer(str);
     }
 
-//    public String filter(Integer pnum) {
-//        Integer poolSum = 0;
-//        for (int i=0;i<pnum;i++) {
-//            poolSum+=Integer.valueOf(queue.element());
-//        }
-//        return String.valueOf(poolSum/pnum);
-//    }
-
     //返回队列的第一个
     public String elementFirst() {
         return queue.element();
+    }
+
+    public String poolElement() {
+        return queue.poll();
     }
 
     //队列是否为空

@@ -1,5 +1,7 @@
 package rain.fibreoblue.utils;
 
+import java.util.UUID;
+
 public class ConstantUtils {
 	//消息类型
 	public final static int WM_STOP_SCAN_BLE=1;
@@ -18,8 +20,15 @@ public class ConstantUtils {
 	public final static String ACTION_STOP_CONNECT="action.stop.connect";
 	
 	
-	//UUID	
+	//蓝牙模块的 UUID
 	public final static  String UUID_SERVER="0000ffe0-0000-1000-8000-00805f9b34fb";
 	public final static  String UUID_NOTIFY="0000ffe1-0000-1000-8000-00805f9b34fb";
+
+//	public final static  String UUID_SERVER="19B10000-E8F2-537E-4F6C-D104768A1214";
+//	public final static  String UUID_NOTIFY="19B10001-E8F2-537E-4F6C-D104768A1214";
+
+	//电源检测
+//	public final static  String UUID_SERVER="0000180F-0000-1000-8000-00805f9b34fb";
+//	public final static  String UUID_NOTIFY="00002A19-0000-1000-8000-00805f9b34fb";
 
 }
