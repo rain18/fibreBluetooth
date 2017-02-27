@@ -60,7 +60,7 @@ public class DrawLineThread implements Runnable{
         List<Line> lines = new ArrayList<Line>();
         line.setShape(ValueShape.CIRCLE);//折线图上每个数据点的形状  这里是圆形 （有三种 ：ValueShape.SQUARE  ValueShape.CIRCLE  ValueShape.SQUARE）
         line.setCubic(false);//曲线是否平滑
-	    line.setStrokeWidth(3);//线条的粗细，默认是3
+	    line.setStrokeWidth(1);//线条的粗细，默认是3
         line.setFilled(false);//是否填充曲线的面积
         line.setHasLabels(true);//曲线的数据坐标是否加上备注
 //		line.setHasLabelsOnlyForSelected(true);//点击数据坐标提示数据（设置了这个line.setHasLabels(true);就无效）
@@ -75,14 +75,14 @@ public class DrawLineThread implements Runnable{
         axisX.setHasTiltedLabels(true);  //X轴下面坐标轴字体是斜的显示还是直的，true是斜的显示
 //	    axisX.setTextColor(Color.WHITE);  //设置字体颜色
         axisX.setTextColor(Color.parseColor("#D6D6D9"));//灰色
-//	    axisX.setName("光纤检测");  //表格名称
-//        axisX.setTextSize(8);//设置字体大小
+
+	    axisX.setName("光纤检测");  //表格名称
+        axisX.setTextSize(5);//设置字体大小
         axisX.setMaxLabelChars(nlength); //最多几个X轴坐标，意思就是你的缩放让X轴上数据的个数7<=x<=mAxisValues.length
         axisX.setValues(mAxisXValues);  //填充X轴的坐标名称
         data.setAxisXBottom(axisX); //x 轴在底部
 //	    data.setAxisXTop(axisX);  //x 轴在顶部
         axisX.setHasLines(true); //x 轴分割线
-//        axisX.setInside(true); //x 在内部
 
 
         Axis axisY = new Axis();  //Y轴
@@ -96,10 +96,10 @@ public class DrawLineThread implements Runnable{
         lineChart.setMaxZoom((float) nlength);//缩放比例
         lineChart.setLineChartData(data);
         lineChart.setVisibility(View.VISIBLE);
-        Viewport v = new Viewport(lineChart.getMaximumViewport());
-        v.left = 0;
-        v.right = nlength;
-        lineChart.setCurrentViewport(v);
+//        Viewport v = new Viewport(lineChart.getMaximumViewport());
+//        v.left = 0;
+//        v.right = nlength;
+//        lineChart.setCurrentViewport(v);
     }
 
     /**
@@ -116,15 +116,15 @@ public class DrawLineThread implements Runnable{
      */
     private void getAxisPoints() {
         Queue<String> queue = queueController.getQueue();
-//        mPointValues.clear();
-//        for (int j=0;j<48;j++) {
-//            mPointValues.add(new PointValue(j,2f));
-//        }
 
         mPointValues.clear(); //手动清除，就不会用数据残留了
+//        for (int i=0; i<nlength; i++) {
+//            mPointValues.add(new PointValue(i, 3));
+//        }
         Integer strtemp = 0;
         for (String str:queue) {
             if (strtemp < nlength) {
+//                Log.w(TAG, "getAxisPoints: "+str );
                 mPointValues.add(new PointValue(strtemp, Float.valueOf(str)));
                 strtemp++;
             } else {
@@ -134,6 +134,7 @@ public class DrawLineThread implements Runnable{
         String filterStr="0"; //16进制的字符串
         for (int i=0;i<blueFilter;i++) {
             filterStr = MainActivity.queueController.poolElement();
+            Log.w(TAG, "filter: " + filterStr);
         }
         if (null==filterStr) {
             filterStr = "0";
@@ -147,10 +148,16 @@ public class DrawLineThread implements Runnable{
         this.nlength = length;
         getAxisXLables();
     }
+    //设置刷新频率
+    public void setmFreq(Integer mFreq) {
+        this.mFreq = mFreq;
+    }
 
     //启动线程
     public void run() {
         getAxisXLables();//获取x轴的标注
+        getAxisPoints();//获取坐标点
+        initLineChart();//初始化
         handler.postDelayed(runnable,mFreq);
     }
 

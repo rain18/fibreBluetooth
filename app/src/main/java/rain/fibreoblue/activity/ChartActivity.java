@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -40,9 +43,10 @@ public class ChartActivity extends Activity{
     private static Integer chartLength;//实际的点数
     private SharePrefenceConfig shaConfig = new SharePrefenceConfig(this);
     private QueueController queueController;
-    private Button btn1,btn2,btnStart,btnStop;
+    private Button btnStart,btnStop;
     private DrawLineThread chartThread;
     private Thread drawThread;
+    private ArrayAdapter<String> chartadapter,reqadapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,24 +64,46 @@ public class ChartActivity extends Activity{
 
 
     public void init() {
-        btn1 = (Button) findViewById(R.id.btn1);
-        btn2 = (Button) findViewById(R.id.btn2);
         btnStart = (Button) findViewById(R.id.btn_start);
         btnStop = (Button) findViewById(R.id.btn_stop);
-        btn1.setOnClickListener(new View.OnClickListener() {
+        Spinner chartspinner = (Spinner) findViewById(R.id.chartspinner);
+        Spinner reqspinner = (Spinner) findViewById(R.id.reqspinner);
+        final String chartlen[] = getResources().getStringArray(R.array.chartlen);
+        final String req[] = getResources().getStringArray(R.array.req);
+        // simple_spinner_item，support_simple_spinner_dropdown_item系统默认的样式
+        chartadapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, chartlen);
+        chartadapter.setDropDownViewResource(R.layout.spinner_drop_item);
+        chartspinner.setAdapter(chartadapter);
+        reqadapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, req);
+        reqadapter.setDropDownViewResource(R.layout.spinner_drop_item);
+        reqspinner.setAdapter(reqadapter);
+
+        //为抽样点spinner绑定监听器
+        chartspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                chartLength = 24;
-                shaConfig.saveConfig("m",chartLength);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.w(TAG, "onItemSelected: "+ chartadapter.getItem(position));
+                chartLength = Integer.valueOf(chartadapter.getItem(position));
+                shaConfig.saveConfig("ChartLength",chartLength);
                 chartThread.setLength(chartLength);
             }
-        });
-        btn2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                chartLength = 20;
-                shaConfig.saveConfig("m",chartLength);
-                chartThread.setLength(chartLength);
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        //为频率spinner绑定监听器
+        reqspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.w(TAG, "onItemSelected: "+ reqadapter.getItem(position));
+                chartFreq = Integer.valueOf(reqadapter.getItem(position));
+                shaConfig.saveConfig("chartFreq",chartFreq);
+                chartThread.setmFreq(chartFreq);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
         //重启图表

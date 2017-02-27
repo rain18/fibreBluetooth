@@ -1,5 +1,10 @@
 <resources>
 
     <string name="app_name">FibreBluetooth</string>
+    <string name="ch_welcome">光缆测试仪</string>
+    <string name="eng_welcome">Optical Cable Identifier</string>
 
+    <!-- setting -->
+    <string name="setting_item1">刷新速率</string>
+    <string name="setting_item2">采样点数</string>
 </resources>
